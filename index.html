@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>治療家タイプ診断｜美容ゼミ</title>
+<style>
+:root{
+  --deep:#1F3B33;--green:#2F7D58;--mint:#CFE6D8;--pale:#E7F0EA;
+  --cream:#F7F3EA;--card:#FFFDF8;--ink:#1E2B27;--gray:#5F6B66;--warm:#C9671E;--line:#E3DCCB;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--cream);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:20px 16px 28px}
+.screen{display:none;flex:1;flex-direction:column;animation:in .35s ease}
+.screen.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.eyebrow{color:var(--warm);font-weight:700;font-size:14px;letter-spacing:.04em}
+h1{font-size:28px;line-height:1.35;margin:8px 0 12px}
+h2{font-size:22px;line-height:1.45;margin:6px 0 18px}
+p.lead{color:var(--gray);font-size:15px;line-height:1.8}
+.hero{background:var(--deep);color:var(--cream);border-radius:20px;padding:28px 22px;margin:18px 0}
+.hero .sprout{width:64px;height:64px;margin-bottom:10px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:17px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;font-family:inherit}
+.btn.main{background:var(--warm);color:#fff;box-shadow:0 4px 0 #9c4f16}
+.btn.main:active{transform:translateY(3px);box-shadow:0 1px 0 #9c4f16}
+.btn.line{background:#06C755;color:#fff;box-shadow:0 4px 0 #04913e;margin-top:12px}
+.btn.sub{background:transparent;color:var(--gray);font-weight:500;font-size:14px;margin-top:10px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:6px 0 18px}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .35s ease}
+.count{font-size:13px;color:var(--gray)}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:16px;font-size:16px;line-height:1.5;text-align:left;cursor:pointer;font-family:inherit;color:var(--ink);transition:transform .1s,border-color .15s,background .15s}
+.opt:active{transform:scale(.98)}
+.opt.pick{border-color:var(--green);background:var(--pale)}
+.back{margin-top:auto;padding-top:18px}
+.loading{align-items:center;justify-content:center;text-align:center}
+.spin{width:72px;height:72px;margin:0 auto 18px;border-radius:50%;border:6px solid var(--mint);border-top-color:var(--green);animation:sp 0.9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.result .type{background:var(--deep);color:var(--cream);border-radius:20px;padding:24px 20px;text-align:center;margin:12px 0 16px}
+.result .type .small{color:var(--mint);font-size:14px;font-weight:700}
+.result .type .name{font-size:30px;line-height:1.3;font-weight:800;margin:6px 0;letter-spacing:.04em}
+.result .type .combo{display:inline-block;background:var(--warm);color:#fff;border-radius:99px;padding:6px 14px;font-size:15px;font-weight:700;margin-top:4px}
+.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.card h3{font-size:14px;color:var(--green);margin-bottom:6px}
+.card p{font-size:15px;line-height:1.75}
+.map{position:relative;aspect-ratio:1/1;background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
+.map .q{position:absolute;width:50%;height:50%;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;font-size:13px;font-weight:700;color:var(--gray)}
+.map .q.hit{background:var(--pale);color:var(--deep)}
+.map .ax{position:absolute;background:var(--line)}
+.map .ax.v{left:50%;top:6%;bottom:6%;width:2px}
+.map .ax.h{top:50%;left:6%;right:6%;height:2px}
+.map .lb{position:absolute;font-size:11px;color:var(--gray);font-weight:700}
+.map .dot{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--warm);border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:left 1s cubic-bezier(.2,1.2,.4,1),top 1s cubic-bezier(.2,1.2,.4,1)}
+.note{font-size:12px;color:var(--gray);line-height:1.7;text-align:center;margin-top:14px}
+footer{font-size:11px;color:var(--gray);text-align:center;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- はじめ -->
+  <section class="screen on" id="s-start">
+    <div class="hero">
+      <svg class="sprout" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 58V30" stroke="#CFE6D8" stroke-width="4" stroke-linecap="round"/><path d="M32 34C32 22 22 16 10 16c0 12 10 18 22 18z" fill="#2F7D58"/><path d="M32 30c0-10 9-16 20-16 0 10-9 16-20 16z" fill="#CFE6D8"/></svg>
+      <div class="eyebrow">美容ゼミ</div>
+      <h1>治療家<br>タイプ診断</h1>
+      <p style="font-size:15px;line-height:1.8;color:var(--mint)">6つの質問に答えると、あなたに合いそうな<br>「働き方」と「見たい人」がわかります。</p>
+    </div>
+    <p class="lead">正解はありません。直感で、いちばん近いものを選んでください。1分で終わります。</p>
+    <div class="back"><button class="btn main" onclick="go(0)">はじめる</button></div>
+  </section>
+
+  <!-- 質問 -->
+  <section class="screen" id="s-q">
+    <div class="count" id="qcount"></div>
+    <div class="bar"><i id="qbar"></i></div>
+    <h2 id="qtext"></h2>
+    <div class="opts" id="qopts"></div>
+    <div class="back"><button class="btn sub" id="qback" onclick="prev()">← 1つ前にもどる</button></div>
+  </section>
+
+  <!-- 計算中 -->
+  <section class="screen loading" id="s-load">
+    <div class="spin"></div>
+    <h2>あなたのタイプを<br>しらべています…</h2>
+  </section>
+
+  <!-- 結果 -->
+  <section class="screen result" id="s-res">
+    <div class="eyebrow" style="text-align:center">あなたは…</div>
+    <div class="type pop">
+      <div class="small" id="r-axis"></div>
+      <div class="name" id="r-name"></div>
+      <div class="combo" id="r-combo"></div>
+    </div>
+    <div class="map" id="map">
+      <div class="q" style="left:0;top:0" data-k="トップアスリート型">トップ<br>アスリート型</div>
+      <div class="q" style="left:50%;top:0" data-k="個人開業・技術追求型">個人開業・<br>技術追求型</div>
+      <div class="q" style="left:0;top:50%" data-k="大手チェーン型">大手<br>チェーン型</div>
+      <div class="q" style="left:50%;top:50%" data-k="リラクゼーション・マッサージ型">リラクゼーション・<br>マッサージ型</div>
+      <div class="ax v"></div><div class="ax h"></div>
+      <div class="lb" style="top:3%;left:50%;transform:translateX(-50%)">↑ 技術をとことん追求</div>
+      <div class="lb" style="bottom:3%;left:50%;transform:translateX(-50%)">↓ 仕組み・運営で安定</div>
+      <div class="lb" style="left:3%;top:50%;transform:translateY(-130%)">← 組織で</div>
+      <div class="lb" style="right:3%;top:50%;transform:translateY(-130%)">自分で →</div>
+      <div class="dot" id="dot" style="left:50%;top:50%"></div>
+    </div>
+    <div class="card"><h3>あなたらしさ</h3><p id="r-desc"></p></div>
+    <div class="card"><h3>合いそうな働く場所</h3><p id="r-place"></p></div>
+    <div class="card" id="r-seecard"><h3>見てみたい人</h3><p id="r-see"></p></div>
+    <a class="btn line" id="r-line" href="#" target="_blank" rel="noopener">LINEで結果を送る</a>
+    <p class="note">結果を送ると、くわしい解説が届きます。<br>スクショして、隣の人と見せ合ってみよう。</p>
+    <button class="btn sub" onclick="restart()">もう一度やる</button>
+    <p class="note">良し悪しはありません。これからの道を考えるきっかけです。<br>地図の外に出ていく「④業界の外へ」という道もあります。</p>
+    <footer>© 2026 BODY SPROUT Co., Ltd.</footer>
+  </section>
+
+</div>
+<script>
+// ===== 設定 =====
+// LINE公式アカウントのID（@から始まるもの）。決まったらここを書きかえる。空なら「LINEで送る」ボタンは隠す。
+const LINE_ID = "";
+
+// ===== 質問（タイプ別診断_案.md と同じ） =====
+const Q = [
+  {axis:"tech", t:"3年後、どんな自分でいたいですか？", o:["「あの先生の技術はすごい」と言われている","少しずつ技術を深めている","安心できる職場で、仕事に慣れている","休みも給料も安定して、生活が整っている"]},
+  {axis:"tech", t:"勉強のしかたで、いちばん近いのは？", o:["休みの日も、自分から講習会に行きたい","必要なら、外の勉強会にも行く","職場の研修で、順番に身につけたい","仕事は仕事、休みはしっかり休みたい"]},
+  {axis:"org", t:"働く場所のイメージに近いのは？", o:["先生や先輩がたくさんいる、大きなチーム","少人数でも、教えてくれる先輩がいる院","経験を積んだら、自分の色を出せる院","いずれ自分の院を持つ・自分で働く"]},
+  {axis:"org", t:"何かを決めるとき、近いのは？", o:["決まったやり方を、正確にやるのが得意","相談しながら、みんなで決めたい","自分で考えて、まず試してみたい","自分のやり方は、自分で決めたい"]},
+  {axis:"see", t:"いちばん見てみたいのは、どんな人の体ですか？", o:["選手・部活など、スポーツをする人","近所の人・お年寄りなど、毎日を暮らす人","姿勢・ボディライン・産後など、美容や女性","まだ分からない"]},
+  {axis:"see", t:"このゼミのあと、いちばん深めたいテーマは？", o:["ケガ・トレーニング","腰・肩のつらさ、お年寄りのケア","姿勢美・O脚・産後ケア","まだ決めていない"]}
+];
+const PTS=[2,1,-1,-2];
+const SEE=["スポーツ","地域","美容・女性",null];
+// 結果の名前は、スライド「10年で見てきた進路の地図」の道の名前にそろえる
+const TYPES={
+  "トップアスリート型":{axis:"組織で × 技術をとことん追求",desc:"すごい先生のそばで、技術をとことん吸収したいタイプ。上手な人の手の動きを見て、自分のものにしていく力があります。地図では「ひと握り」の道です。"},
+  "個人開業・技術追求型":{axis:"自分で × 技術をとことん追求",desc:"腕をみがいて、いずれ自分の看板で勝負したいタイプ。学んだことを自分なりに組み立てて、新しいやり方を試せる人です。地図では「増えている」道です。"},
+  "大手チェーン型":{axis:"組織で × 仕組み・運営で安定",desc:"仲間と一緒に、決まったしくみの中で着実に成長したいタイプ。同じやり方を正確に続けられることが、そのまま強みになります。地図では「多数派」の道です。"},
+  "リラクゼーション・マッサージ型":{axis:"自分で × 自分のペースで安定",desc:"自分のペースを大事にしながら、長く続けたいタイプ。無理をしない働き方を選べることも、立派な力です。"}
+};
+// 働く場所の例：タイプ × 見たい人（null＝まだ分からない）
+const PLACES={
+  "トップアスリート型":{"スポーツ":"スポーツ帯同を強化している院。選手やチームのそばで働く道。","地域":"腕の立つ先生がいる、地域の整骨院。","美容・女性":"姿勢や美容を専門にしている先生のもとで学ぶ道。",null:"トップの先生のもとで学べる院。"},
+  "個人開業・技術追求型":{"スポーツ":"スポーツに強い自費の院で経験を積み、いずれ独立。","地域":"地域に根ざした、自分の院を持つ道。","美容・女性":"姿勢・産後などを専門にした自費の院。いずれ独立や、教える側（育てる側）へ。",null:"技術を磨いて、いずれ自分の院や、教える側（育てる側）へ。"},
+  "大手チェーン型":{"スポーツ":"スポーツ整形外科のリハビリ、部活の学生が多いグループ院。","地域":"整形外科・病院などの医療機関、介護施設の機能訓練、研修のある大手グループ。","美容・女性":"骨盤・姿勢のメニューがある大手グループ。",null:"研修のある大手グループや、整形外科・病院などの医療機関。"},
+  "リラクゼーション・マッサージ型":{"スポーツ":"ストレッチ専門店やフィットネスの現場。","地域":"地域のリラクゼーション・ほぐしのお店。","美容・女性":"整体サロンやリラクゼーションの美容メニュー。",null:"時間や働き方を選びやすい職場。"}
+};
+const SEETXT={
+  "スポーツ":"部活やチームの選手など、体を動かす人のケア。ケガの予防やトレーニングにも関われます。",
+  "地域":"近所の人やお年寄りなど、毎日を暮らす人の体。長く通ってもらえる関係をつくる仕事です。",
+  "美容・女性":"姿勢・ボディライン・産後など、美容や女性の体。このゼミの内容と、いちばんつながっています。"
+};
+
+let i=0; const ans=[];
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0)}
+function go(n){i=n;render();show('s-q')}
+function render(){
+  const q=Q[i];
+  $('qcount').textContent=`質問 ${i+1} / ${Q.length}`;
+  $('qbar').style.width=`${(i)/Q.length*100}%`;
+  $('qtext').textContent=q.t;
+  const box=$('qopts');box.innerHTML='';
+  q.o.forEach((t,k)=>{const b=document.createElement('button');b.className='opt'+(ans[i]===k?' pick':'');b.textContent=t;
+    b.onclick=()=>{ans[i]=k;b.classList.add('pick');setTimeout(next,220)};box.appendChild(b)});
+  $('qback').style.visibility=i===0?'hidden':'visible';
+}
+function next(){if(i<Q.length-1){i++;render();window.scrollTo(0,0)}else{finish()}}
+function prev(){if(i>0){i--;render()}}
+function finish(){
+  $('qbar').style.width='100%';show('s-load');
+  setTimeout(result,1400);
+}
+function result(){
+  let tech=PTS[ans[0]]+PTS[ans[1]], org=PTS[ans[2]]+PTS[ans[3]];
+  const isTech = tech>0 || (tech===0 && PTS[ans[0]]>0);
+  const isOrg  = org>0  || (org===0  && PTS[ans[2]]>0);
+  const type = isTech ? (isOrg?"トップアスリート型":"個人開業・技術追求型") : (isOrg?"大手チェーン型":"リラクゼーション・マッサージ型");
+  const see = SEE[ans[4]] || SEE[ans[5]] || null;
+  const T=TYPES[type];
+  $('r-axis').textContent=T.axis;
+  $('r-name').textContent=type;
+  $('r-combo').textContent= see ? `${type} × ${see}` : "見たい人は、これから見つけよう";
+  $('r-desc').textContent=T.desc;
+  $('r-place').textContent=PLACES[type][see];
+  if(see){$('r-see').textContent=SEETXT[see];$('r-seecard').style.display='block'}else{$('r-seecard').style.display='none'}
+  document.querySelectorAll('.map .q').forEach(e=>e.classList.toggle('hit',e.dataset.k===type));
+  // 点の位置：横＝組織(左)〜自分(右)、縦＝技術(上)〜安定(下)。点数は-4〜+4
+  const x=50 - org/4*38, y=50 - tech/4*38;
+  const d=$('dot'); d.style.left='50%'; d.style.top='50%';
+  show('s-res');
+  setTimeout(()=>{d.style.left=x+'%';d.style.top=y+'%'},250);
+  const line=$('r-line');
+  if(LINE_ID){
+    const msg=`タイプ診断の結果：${see?type+' × '+see:type}`;
+    line.href=`https://line.me/R/oaMessage/${encodeURIComponent(LINE_ID)}/?${encodeURIComponent(msg)}`;
+    line.style.display='block';
+  } else { line.style.display='none'; }
+}
+function restart(){ans.length=0;show('s-start')}
+</script>
+</body>
+</html>
