@@ -98,10 +98,10 @@ footer{font-size:11px;color:var(--gray);text-align:center;margin-top:18px}
       <div class="combo" id="r-combo"></div>
     </div>
     <div class="map" id="map">
-      <div class="q" style="left:0;top:0" data-k="トップアスリート型">トップ<br>アスリート型</div>
-      <div class="q" style="left:50%;top:0" data-k="個人開業・技術追求型">個人開業・<br>技術追求型</div>
-      <div class="q" style="left:0;top:50%" data-k="大手チェーン型">大手<br>チェーン型</div>
-      <div class="q" style="left:50%;top:50%" data-k="リラクゼーション・マッサージ型">リラクゼーション・<br>マッサージ型</div>
+      <div class="q" style="left:0;top:0" data-k="UL">トップアスリート型<br>／整形外科型</div>
+      <div class="q" style="left:50%;top:0" data-k="UR">個人開業・<br>技術追求型</div>
+      <div class="q" style="left:0;top:50%" data-k="LL">大手<br>チェーン型</div>
+      <div class="q" style="left:50%;top:50%" data-k="LR">リラクゼーション・<br>マッサージ型</div>
       <div class="ax v"></div><div class="ax h"></div>
       <div class="lb" style="top:3%;left:50%;transform:translateX(-50%)">↑ 技術をとことん追求</div>
       <div class="lb" style="bottom:3%;left:50%;transform:translateX(-50%)">↓ 仕組み・運営で安定</div>
@@ -132,7 +132,9 @@ const Q = [
   {axis:"org", t:"働く場所のイメージに近いのは？", o:["先生や先輩がたくさんいる、大きなチーム","少人数でも、教えてくれる先輩がいる院","経験を積んだら、自分の色を出せる院","いずれ自分の院を持つ・自分で働く"]},
   {axis:"org", t:"何かを決めるとき、近いのは？", o:["決まったやり方を、正確にやるのが得意","相談しながら、みんなで決めたい","自分で考えて、まず試してみたい","自分のやり方は、自分で決めたい"]},
   {axis:"see", t:"いちばん見てみたいのは、どんな人の体ですか？", o:["選手・部活など、スポーツをする人","近所の人・お年寄りなど、毎日を暮らす人","姿勢・ボディライン・産後など、美容や女性","まだ分からない"]},
-  {axis:"see", t:"このゼミのあと、いちばん深めたいテーマは？", o:["ケガ・トレーニング","腰・肩のつらさ、お年寄りのケア","姿勢美・O脚・産後ケア","まだ決めていない"]}
+  {axis:"see", t:"このゼミのあと、いちばん深めたいテーマは？", o:["ケガ・トレーニング","腰・肩のつらさ、お年寄りのケア","姿勢美・O脚・産後ケア","まだ決めていない"]},
+  // 「組織で × 技術を追求」になった人にだけ出す質問
+  {axis:"med", extra:true, t:"いちばん身につけたいのは、どっち？", o:["骨折・脱臼の整復や、包帯・固定など、学校で学んだ医療の知識と技術","すごい先生の手技や、スポーツ選手を見る技術"]}
 ];
 const PTS=[2,1,-1,-2];
 const SEE=["スポーツ","地域","美容・女性",null];
@@ -140,14 +142,16 @@ const SEE=["スポーツ","地域","美容・女性",null];
 const TYPES={
   "トップアスリート型":{axis:"組織で × 技術をとことん追求",desc:"すごい先生のそばで、技術をとことん吸収したいタイプ。上手な人の手の動きを見て、自分のものにしていく力があります。地図では「ひと握り」の道です。"},
   "個人開業・技術追求型":{axis:"自分で × 技術をとことん追求",desc:"腕をみがいて、いずれ自分の看板で勝負したいタイプ。学んだことを自分なりに組み立てて、新しいやり方を試せる人です。地図では「増えている」道です。"},
-  "大手チェーン型":{axis:"組織で × 仕組み・運営で安定",desc:"仲間と一緒に、決まったしくみの中で着実に成長したいタイプ。同じやり方を正確に続けられることが、そのまま強みになります。地図では「多数派」の道です。"},
+  "大手チェーン型":{axis:"組織で × 仕組み・運営で安定",desc:"まずは安定した給料と休みを大事にしたいタイプ。決まったメニューと手順がある職場で、無理なく働きはじめられます。地図では「多数派」の道です。"},
+  "整形外科型":{axis:"組織で × 医療の知識と技術を追求",desc:"学校で学んだ知識を、そのまま現場で活かしたいタイプ。骨折・脱臼の整復や、包帯・固定など、柔道整復師ならではの技術をきちんと身につけたい人です。"},
   "リラクゼーション・マッサージ型":{axis:"自分で × 自分のペースで安定",desc:"自分のペースを大事にしながら、長く続けたいタイプ。無理をしない働き方を選べることも、立派な力です。"}
 };
 // 働く場所の例：タイプ × 見たい人（null＝まだ分からない）
 const PLACES={
   "トップアスリート型":{"スポーツ":"スポーツ帯同を強化している院。選手やチームのそばで働く道。","地域":"腕の立つ先生がいる、地域の整骨院。","美容・女性":"姿勢や美容を専門にしている先生のもとで学ぶ道。",null:"トップの先生のもとで学べる院。"},
   "個人開業・技術追求型":{"スポーツ":"スポーツに強い自費の院で経験を積み、いずれ独立。","地域":"地域に根ざした、自分の院を持つ道。","美容・女性":"姿勢・産後などを専門にした自費の院。いずれ独立や、教える側（育てる側）へ。",null:"技術を磨いて、いずれ自分の院や、教える側（育てる側）へ。"},
-  "大手チェーン型":{"スポーツ":"スポーツ整形外科のリハビリ、部活の学生が多いグループ院。","地域":"整形外科・病院などの医療機関、介護施設の機能訓練、研修のある大手グループ。","美容・女性":"骨盤・姿勢のメニューがある大手グループ。",null:"研修のある大手グループや、整形外科・病院などの医療機関。"},
+  "大手チェーン型":{"スポーツ":"部活やスポーツのケガの人が多い、大手グループの整骨院。","地域":"地域に店舗の多い、大手グループの整骨院・整体院やリラクゼーションのお店。","美容・女性":"骨盤・姿勢のメニューがある大手グループ。",null:"研修のしくみがある、大手グループの整骨院・整体院。"},
+  "整形外科型":{"スポーツ":"スポーツ整形外科。ケガの処置からリハビリまで関われる現場。","地域":"地域の整形外科クリニックや病院。骨折・脱臼の処置や固定にふれられる職場。","美容・女性":"整形外科・病院で医療の基礎を固め、その先で姿勢や産後のケアに広げる道。",null:"整形外科・病院・クリニックなどの医療機関。"},
   "リラクゼーション・マッサージ型":{"スポーツ":"ストレッチ専門店やフィットネスの現場。","地域":"地域のリラクゼーション・ほぐしのお店。","美容・女性":"整体サロンやリラクゼーションの美容メニュー。",null:"時間や働き方を選びやすい職場。"}
 };
 const SEETXT={
@@ -162,25 +166,39 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 function go(n){i=n;render();show('s-q')}
 function render(){
   const q=Q[i];
-  $('qcount').textContent=`質問 ${i+1} / ${Q.length}`;
-  $('qbar').style.width=`${(i)/Q.length*100}%`;
+  $('qcount').textContent= Q[i].extra ? 'さいごに、もう1問' : `質問 ${i+1} / ${BASE}`;
+  $('qbar').style.width=`${Math.min(i,BASE)/BASE*100}%`;
   $('qtext').textContent=q.t;
   const box=$('qopts');box.innerHTML='';
   q.o.forEach((t,k)=>{const b=document.createElement('button');b.className='opt'+(ans[i]===k?' pick':'');b.textContent=t;
     b.onclick=()=>{ans[i]=k;b.classList.add('pick');setTimeout(next,220)};box.appendChild(b)});
   $('qback').style.visibility=i===0?'hidden':'visible';
 }
-function next(){if(i<Q.length-1){i++;render();window.scrollTo(0,0)}else{finish()}}
-function prev(){if(i>0){i--;render()}}
+const BASE=6;
+function quad(){
+  const tech=PTS[ans[0]]+PTS[ans[1]], org=PTS[ans[2]]+PTS[ans[3]];
+  const isTech = tech>0 || (tech===0 && PTS[ans[0]]>0);
+  const isOrg  = org>0  || (org===0  && PTS[ans[2]]>0);
+  return {tech,org,code:(isTech?'U':'L')+(isOrg?'L':'R')};
+}
+function next(){
+  if(i<BASE-1){i++;render();window.scrollTo(0,0);return}
+  if(i===BASE-1 && quad().code==='UL'){i=BASE;render();window.scrollTo(0,0);return}
+  finish();
+}
+function prev(){if(i>0){i=(i===BASE)?BASE-1:i-1;render()}}
 function finish(){
   $('qbar').style.width='100%';show('s-load');
   setTimeout(result,1400);
 }
 function result(){
-  let tech=PTS[ans[0]]+PTS[ans[1]], org=PTS[ans[2]]+PTS[ans[3]];
-  const isTech = tech>0 || (tech===0 && PTS[ans[0]]>0);
-  const isOrg  = org>0  || (org===0  && PTS[ans[2]]>0);
-  const type = isTech ? (isOrg?"トップアスリート型":"個人開業・技術追求型") : (isOrg?"大手チェーン型":"リラクゼーション・マッサージ型");
+  const {tech,org,code}=quad();
+  const NAMES={UL:"トップアスリート型",UR:"個人開業・技術追求型",LL:"大手チェーン型",LR:"リラクゼーション・マッサージ型"};
+  let type=NAMES[code];
+  if(code==='UL' && ans[BASE]===0) type="整形外科型";
+  // 授業のスライドで人数を自動で数えるため、タイプ名だけを送る（名前などは送らない）。1回の診断で1回だけ。
+  try{ if(!window.__sentType){ window.__sentType=true;
+    fetch('https://docs.google.com/forms/d/e/1FAIpQLSeyGJ6fUUs4TD_C3ypNvveKLsZsZJNN7GPQeMnOVhf2Kz9dTw/formResponse',{method:'POST',mode:'no-cors',body:new URLSearchParams({'entry.1700560886':type})}).catch(()=>{}); } }catch(e){}
   const see = SEE[ans[4]] || SEE[ans[5]] || null;
   const T=TYPES[type];
   $('r-axis').textContent=T.axis;
@@ -189,7 +207,7 @@ function result(){
   $('r-desc').textContent=T.desc;
   $('r-place').textContent=PLACES[type][see];
   if(see){$('r-see').textContent=SEETXT[see];$('r-seecard').style.display='block'}else{$('r-seecard').style.display='none'}
-  document.querySelectorAll('.map .q').forEach(e=>e.classList.toggle('hit',e.dataset.k===type));
+  document.querySelectorAll('.map .q').forEach(e=>e.classList.toggle('hit',e.dataset.k===code));
   // 点の位置：横＝組織(左)〜自分(右)、縦＝技術(上)〜安定(下)。点数は-4〜+4
   const x=50 - org/4*38, y=50 - tech/4*38;
   const d=$('dot'); d.style.left='50%'; d.style.top='50%';
@@ -202,7 +220,7 @@ function result(){
     line.style.display='block';
   } else { line.style.display='none'; }
 }
-function restart(){ans.length=0;show('s-start')}
+function restart(){ans.length=0;i=0;show('s-start')}
 </script>
 </body>
 </html>
