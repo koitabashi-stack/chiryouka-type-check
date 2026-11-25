@@ -62,7 +62,7 @@ const Q=[
  ['施術者になったら、どうなりたい？','新しい施術法を生み出す','ファンがたくさんいる先生','目の前の人にとことん合わせる','結果を数字で示せる先生'],
  ['買い物のとき、近いのは？','新商品にひかれる','人のおすすめで買う','実際にさわって試す','くらべて調べてから買う']];
 const EN={A:['ダイナモ','アイデア・ひらめき','#c9671e'],B:['ブレイズ','人・つながり','#c8322a'],C:['テンポ','五感・タイミング','#2f7d58'],D:['スチール','データ・しくみ','#2c6fb3']};
-const FAMOUS={A:'エジソン、ウォルト・ディズニー、スティーブ・ジョブズ',B:'オプラ・ウィンフリー、ジャック・ウェルチ',C:'ジョージ・ソロス、ウォーレン・バフェット',D:'ジョン・D・ロックフェラー、ヘンリー・フォード'};
+const FAMOUS={A:'トーマス・エジソン（発明王）、スティーブ・ジョブズ（Apple）',AB:'オプラ・ウィンフリー（司会者）、マーサ・スチュワート（暮らしの達人）',B:'ジャック・ウェルチ（GE元CEO）、スティーブ・バルマー（Microsoft元CEO）',BC:'デヴィッド・ゲフィン（ドリームワークス創業）',C:'ジョージ・ソロス（投資家）、ピーター・リンチ（投資家）',CD:'ウォーレン・バフェット（投資家）',D:'ジョン・D・ロックフェラー（石油王）、アンドリュー・カーネギー（鉄鋼王）',DA:'ヘンリー・フォード（自動車）、レイ・クロック（マクドナルドを大きくした人）'};
 const PR={
  A:['クリエイター','アイデアを生み出し、新しいことを始めるのが得意。','新しいメニューや、自分だけの施術を生み出す。開業や商品づくりで力を出しやすい。','始めたことを最後まで回すのは、仕組みや仲間に任せると伸びる。'],
  AB:['スター','自分が前に出ることで、人を引きつけるのが得意。','「この先生に診てほしい」と指名される。SNSやセミナーで発信する。','細かい管理や事務は、得意な人と組むと伸びる。'],
@@ -90,7 +90,7 @@ function profileOf(c){
 }
 function finish(){
   const c={A:0,B:0,C:0,D:0}; ans.forEach(a=>c[a]++);
-  const key=profileOf(c), p=PR[key], top=key[0];
+  const key=profileOf(c), p=PR[key], top=[...ORDER].sort((x,y)=>c[y]-c[x]||ORDER.indexOf(x)-ORDER.indexOf(y))[0];
   const part=new Date().getHours()<16?'昼':'夜';
   try{ fetch(FORM,{method:'POST',mode:'no-cors',body:new URLSearchParams({'entry.1700560886':`ウェルス｜${name}｜${part}｜${ans.join('')}｜${EN[top][0]}｜${p[0]}`})}).catch(()=>{}); }catch(e){}
   try{ localStorage.setItem('wealth-result',JSON.stringify({name,ans,key})); }catch(e){}
@@ -101,7 +101,7 @@ function finish(){
    <p class="sec">どんな人？</p><p>${p[1]}</p>
    <p class="sec">施術者としての活躍の道</p><p>${p[2]}</p>
    <p class="sec">伸ばすヒント</p><p>${p[3]}</p>
-   <p class="sec">同じエネルギーの有名人</p><p>${FAMOUS[top]}</p></div>
+   <p class="sec">同じタイプの有名人</p><p>${FAMOUS[key]}</p></div>
    <div class="card"><p class="sec" style="margin-top:0">あなたのエネルギーのバランス</p>${bars}
    <p class="note">いちばん多いエネルギーと、となりあう2番目の組み合わせでタイプが決まります。</p></div>
    <p style="font-weight:900;text-align:center">この画面のまま、前のスライドを見てね</p>`;
