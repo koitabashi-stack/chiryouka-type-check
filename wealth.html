@@ -72,6 +72,7 @@ const PR={
  CD:['アキュムレーター','コツコツ積み上げ、確実に続けるのが得意。','リピーターを大切にし、記録で信頼を積み上げる。','新しいことに慣れるまで、少し時間をもらう。'],
  D:['ロード','データと細かいところを管理し、仕組みで回すのが得意。','評価や数字で結果を示す。院の運営・管理。','人前に出るのは、得意な人と組めばOK。'],
  DA:['メカニック','仕組みを見直して、もっとよくするのが得意。','施術の手順づくり・マニュアル化。教える側。','完璧を求めすぎないように。']};
+const JP={A:'本田宗一郎',AB:'明石家さんま',B:'松下幸之助',BC:'孫正義',C:'是川銀蔵（相場師）',CD:'二宮尊徳',D:'稲盛和夫',DA:'大野耐一（トヨタ生産方式）'};
 const ORDER='ABCD';
 let name='', ans=[], i=0;
 const $=id=>document.getElementById(id);
@@ -101,7 +102,7 @@ function finish(){
    <p class="sec">どんな人？</p><p>${p[1]}</p>
    <p class="sec">施術者としての活躍の道</p><p>${p[2]}</p>
    <p class="sec">伸ばすヒント</p><p>${p[3]}</p>
-   <p class="sec">同じタイプの有名人</p><p>${FAMOUS[key]}</p></div>
+   <p class="sec">同じタイプの有名人</p><p>${FAMOUS[key]}</p><p class="note">日本人なら（イメージ）：${JP[key]}</p></div>
    <div class="card"><p class="sec" style="margin-top:0">あなたのエネルギーのバランス</p>${bars}
    <p class="note">いちばん多いエネルギーと、となりあう2番目の組み合わせでタイプが決まります。</p></div>
    <p style="font-weight:900;text-align:center">この画面のまま、前のスライドを見てね</p>`;
